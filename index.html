@@ -1,0 +1,130 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf8"></meta>
+		<meta lang="pt-br"></meta>
+		<title>Teste Formulário Javascript</title>
+		<script>
+		var combo = [];
+		var i = 0;
+		var preco = 0;
+		var desconto = 0;
+		var vTotal = 0;
+		var periodo;
+		var servidores = {
+			"Uploaded": {preco: "14.99", desconto: '9.00'},
+			"Rapidgator": {preco: "12.99", desconto: '10.35'},
+			"Uptobox": {preco: "14.99", desconto: '10.35'},
+			"Mediafire": {preco: "12.99", desconto: '10.35'},
+			"Mega": {preco: "29.99", desconto: '2.00'},
+			"Nitroflare": {preco: "74.99", desconto: '4.00'},
+			"Filesmonster": {preco: "59.99", desconto: '4.00'}
+		}
+		
+		function exibeCombo(combo, vTotal){
+		
+			document.getElementById("combo").innerHTML = combo.sort();
+			document.getElementById("preco").innerHTML = "R$ " + vTotal.toFixed(2).replace('.', ',');
+
+		}
+		
+		function periodoPremium(p){
+			periodo = p;
+		}
+		
+		function servidor(server, check){
+			//ADICINA SERVIDOR NA ARRAY
+			if(check === true){
+				combo.push(server)
+				preco += parseFloat(servidores[server].preco);
+				desconto += parseFloat(servidores[server].desconto);
+			};
+			
+			//REMOVE SERVIDOR DA ARRAY
+			for(a in combo){
+				if(combo[a] === server && check === false){
+					combo.splice(combo.indexOf(server), 1);
+					if(preco >= 0){
+						preco -= parseFloat(servidores[server].preco);
+						desconto -= parseFloat(servidores[server].desconto);
+					}
+				}
+				
+				vTotal = parseFloat(preco) - parseFloat(combo.length === 1 ? "0.00" : desconto);
+				
+				
+				if(vTotal < 16.00){
+					vTotal = 16.00;
+				}
+				
+				if(preco <= 0){
+					vTotal = 0;
+				}	
+			}			
+			//EXIBE O COMBO NO CONSOLE
+			
+			if(periodo > 1){
+				vTotal = vTotal * parseInt(periodo);
+				vTotal = vTotal + (vTotal * 0.3);
+			}
+			
+			if(periodo === 1){
+				vTotal = vTotal * parseInt(periodo);
+			}
+			
+			exibeCombo(combo, vTotal);			
+		}
+		
+		function main(){
+			periodoPremium(1);
+			servidor('Uploaded', true);
+			servidor('Rapidgator', true);
+			servidor('Uptobox', true);
+			servidor('Mediafire', true);
+		}
+		
+		</script>
+		<style>
+			
+		</style>
+	</head>
+	<body onload="main()">
+		<p id="combo"></p>
+		<strong><p id="preco"></p></strong>
+			<label>
+				<input type="checkbox" onchange="servidor(value,checked)" name="Uploaded" value="Uploaded" checked/>
+				Uploaded
+			</label>
+			<label>
+				<input type="checkbox" onchange="servidor(value,checked)" name="Rapidgator" value="Rapidgator" checked/>
+				Rapidgator
+			</label>
+			<label>
+				<input type="checkbox" onchange="servidor(value,checked)" name="Uptobox" value="Uptobox" checked/>
+				Uptobox
+			</label>
+			<label>
+				<input type="checkbox" onchange="servidor(value,checked)" name="Mediafire" value="Mediafire" checked/>
+				Mediafire
+			</label>
+			<label>
+				<input type="checkbox" onchange="servidor(value,checked)" name="Mega" value="Mega" />
+				Mega
+			</label>
+			<label>
+				<input type="checkbox" onchange="servidor(value,checked)" name="Nitroflare" value="Nitroflare" />
+				Nitroflare
+			</label>
+			<label>
+				<input type="checkbox" onchange="servidor(value,checked)" name="Filesmonster" value="Filesmonster" />
+				Filesmonster
+			</label>
+			<br /><br />
+			<label><input onchange="periodoPremium(value), servidor()" type="radio" name="periodo" value="1" checked/>30 Dias</label>
+			<label><input onchange="periodoPremium(value), servidor()" type="radio" name="periodo" value="2"/>60 Dias</label>
+			<label><input onchange="periodoPremium(value), servidor()" type="radio" name="periodo" value="3"/>90 Dias</label>
+			<label><input onchange="periodoPremium(value), servidor()" type="radio" name="periodo" value="6"/>180 Dias</label>
+			<label><input onchange="periodoPremium(value), servidor()" type="radio" name="periodo" value="12"/>360 Dias</label>
+		</form>
+	</body>
+</html>
